@@ -1,0 +1,4 @@
+#define proddata_VERSION_MAJOR @proddata_VERSION_MAJOR@
+#define proddata_VERSION_MINOR @proddata_VERSION_MINOR@
+#define proddata_VERSION_PATCH @proddata_VERSION_PATCH@
+

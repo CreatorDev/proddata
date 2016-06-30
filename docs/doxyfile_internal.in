@@ -1,0 +1,22 @@
+PROJECT_NAME           = "@CMAKE_PROJECT_NAME@"
+PROJECT_NUMBER         = @proddata_VERSION@
+JAVADOC_AUTOBRIEF      = YES
+HTML_HEADER            = @COMMON_DOCS_DIR@/header.html
+HTML_FOOTER            = @COMMON_DOCS_DIR@/footer.html
+GENERATE_LATEX         = NO
+HAVE_DOT               = YES
+STRIP_FROM_PATH        = @PROJECT_SOURCE_DIR@ \
+                         @PROJECT_BINARY_DIR@
+INPUT                  = @PROJECT_SOURCE_DIR@ \
+                         @PROJECT_SOURCE_DIR@/docs/mainpage.dox
+FILE_PATTERNS          = *.h \
+                         *.cc
+RECURSIVE              = YES
+INTERNAL_DOCS          = YES
+HTML_STYLESHEET        = @COMMON_DOCS_DIR@/doxygen.css
+HTML_EXTRA_STYLESHEET  = @COMMON_DOCS_DIR@/caskeid.css
+HTML_EXTRA_FILES       = @COMMON_DOCS_DIR@/tabs.css \
+                         @COMMON_DOCS_DIR@/imgteclogo.png \
+                         @COMMON_DOCS_DIR@/caskeidlogo.png
+GENERATE_TAGFILE       = @PROJECT_BINARY_DIR@/docs/proddata.tag
+USE_MDFILE_AS_MAINPAGE = @doxy_main_page@

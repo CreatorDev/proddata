@@ -1,0 +1,174 @@
+/** @mainpage Proddata Package
+
+@section overview Overview
+
+This package provides Proddata tool used to read/write/lock OTP.@n
+Board OTP data is currently stored in NOR security registers, Winbond NOR has
+3 security registers of 256 bytes size and each register can be individually locked.
+Please check @subpage otp_layout for details of the OTP data layout.
+Each NOR also has a unique serial ID which can be read using this tool.
+
+@section revision_history Revision History
+
+| Revision  | Changes from previous revision |
+| :----     | :----                          |
+| 0.1.0     | Initial revision               |
+
+@section package_content Package Content
+
+The release package is structured as follows:
+
+| Folder     | Content                                                          |
+| :----      | :----                                                            |
+| docs       | Design documents and rules to generate Doxygen documentation     |
+| src        | Source files                                                     |
+| utest      | Unit tests                                                       |
+
+@section installation Installation
+
+@subsection dependencies Dependencies
+
+- glog >= 0.3.4
+- gmock >= 1.7.0
+- doxygen >= 1.8.6
+
+@subsection building_package Building Package
+@verbatim
+$ cd proddata
+$ mkdir <build_dir>
+$ cd <build_dir>
+// to build
+$ cmake ../ -DCPPLINT_EXECUTABLE=<path_to_cpplint> -DGMOCK_DIR=<path_to_gmock> [OPTIONS]
+Options:
+-DBUILD_TESTS=OFF - To build without utests
+-DCHECK_DEP=OFF - To build docs and cpplint without checking for build dependencies
+$ make all
+// might require superuser privilege
+$ make install
+@endverbatim
+
+@subsection installed_files Installed Files
+
+- proddata
+- libcrclib.so
+
+@subsection how_to_use_proddata How to use proddata
+
+Proddata is a command line tool.
+
+- Command to write data to OTP
+  @verbatim
+  // To write complete calibration data
+  $ proddata write <data>
+  // To write single data field
+  $ proddata write <field name> <value>
+  e.g
+  $ proddata write MAC_0 000000000000
+  // writing version only is not allowed, e.g
+  $ proddata write VERSION_REG0 02
+  $ proddata write VERSION_REG1 02
+  @endverbatim
+  @note
+  It is required that there is a valid data with version already written(by prodtest or user) to OTP for writing single data field to work
+  @attention
+  This will overwrite existing data.
+
+  Currently proddata support layouts defined in @subpage otp_layout
+
+- Command to read complete proddata from OTP
+  @verbatim
+  $ proddata read
+  @endverbatim
+
+- Command to read particular value from OTP. e.g 1st mac address
+  @verbatim
+  $ proddata read MAC_0
+  $ proddata read VERSION_REG0
+  @endverbatim
+
+- Command to read serial number
+  @verbatim
+  $ proddata read SERIAL
+  @endverbatim
+
+  Please check @subpage otp_layout for other supported fields.
+
+@section standard_tools Other OTP tools
+
+Stored OTP data can be read using the proddata commands as explained above.
+Winbond NOR security registers are implemented as standard Linux MTD user OTP data and NOR
+serial ID is factory OTP, so it can also be accessed using the MTD tools by
+enabling these below packages in Buildroot.
+@verbatim
++BR2_PACKAGE_MTD_FLASH_OTP_DUMP=y
++BR2_PACKAGE_MTD_FLASH_OTP_INFO=y
++BR2_PACKAGE_MTD_FLASH_OTP_LOCK=y
++BR2_PACKAGE_MTD_FLASH_OTP_WRITE=y
+@endverbatim
+
+- OTP info
+
+  To print OTP info use flash_otp_info
+  @verbatim
+  $ flash_otp_info
+  Usage: flash_otp_info [ -f | -u ] <device>
+
+  $ flash_otp_info -u /dev/mtd0
+  Number of OTP user blocks on /dev/mtd0: 3
+  block  0:  offset = 0x0000  size = 256 bytes  [unlocked]
+  block  1:  offset = 0x0100  size = 256 bytes  [unlocked]
+  block  2:  offset = 0x0200  size = 256 bytes  [unlocked]
+  @endverbatim
+
+- OTP read
+
+  To print OTP data use flash_otp_dump
+  @verbatim
+  $ flash_otp_dump
+  Usage: flash_otp_dump [ -f | -u ] <device>
+
+  $ flash_otp_dump -u /dev/mtd0
+  OTP user data for /dev/mtd0
+  0x0000: 7e 6e 01 00 00 00 00 00 00 11 11 11 11 11 11 22
+  ...
+  @endverbatim
+
+- OTP write
+
+  To write OTP data use factory_otp_write, specify the offset, enter the values to
+  be written and then press Ctrl+d thrice. Note that the warning shown by the tool is not applicable
+  to this implementation, data can be written multiple number of times until it is locked.
+  @note
+  Modifying the existing saved data can cause proddata tool to fail, so please check
+  @subpage otp_layout for the current layout and locations which should not be modified.
+  For some boards, first two security registers will be locked during production, so there won't be any way to modify it,
+  flash_otp_info should show the lock status.
+
+  @verbatim
+  $ flash_otp_write
+  Usage: flash_otp_write -u <device> <offset>
+  the raw data to write should be provided on stdin
+  CAUTION! ONCE SET TO 0, OTP DATA BITS CAN'T BE ERASED!
+
+  $ flash_otp_write -u /dev/mtd0 512
+  Writing OTP user data on /dev/mtd0 at offset 0x200
+  1234read 4
+  writing 4
+  Wrote 4 bytes of OTP user data
+  @endverbatim
+
+- OTP lock
+
+  To lock the OTP register use flash_otp_lock, note that only 1 register(256 bytes) can be locked at a time,
+  so offset and size have to be based on that. OTP info shows the number of register and lock status.
+  @attention
+  Once locked the corresponding register is read-only permanently.
+
+  @verbatim
+  $ flash_otp_lock
+  Usage: flash_otp_lock -u <device> <offset> <size>
+  offset and size must match on OTP region boundaries
+  CAUTION! ONCE LOCKED, OTP REGIONS CAN'T BE UNLOCKED!
+  @endverbatim
+
+*/
