@@ -1,0 +1,44 @@
+/** @page otp_layout OTP layout
+
+@section layout Layout details
+
+@subsection serial Serial ID
+| Serial | Format  |
+| :----  | :----   |
+| SERIAL | 8 bytes |
+
+@subsection reg_0 Security register 0
+
+| Field        | Format               | Offset | Version | Notes              |
+| :----        | :----                | :----  | :----   | :----              |
+| CRC_REG0     | 16 bit               | 0      |         |                    |
+| VERSION_REG0 | unsigned char        | 2      | 1       |                    |
+| MAC_0        | 6 bytes              | 3      | 1       |WiFi                |
+| MAC_1        | 6 bytes              | 9      | 1       |WiFi (softAP)       |
+| MAC_2        | 6 bytes              | 15     | 1       |Bluetooth           |
+| MAC_3        | 6 bytes              | 21     | 1       |Ethernet            |
+| MAC_4        | 6 bytes              | 27     | 1       |Mesh                |
+| MAC_5        | 6 bytes              | 33     | 1       |6lowpan (Ci40 only) |
+
+
+@subsection reg_1 Security register 1
+| Field                  | Format                        | Offset | Version | Notes               |
+| :----                  | :----                         | :----  |         | :----               |
+| CRC_REG1               | 16 bit                        | 256    |         |                     |
+| VERSION_REG1           | unsigned char                 | 258    | 1       |                     |
+| DCXO                   | signed char                   | 259    | 1       |DCXO frequency offset|
+| PD_A1_B24              | signed char                   | 260    | 2       |Antenna 1 2.4G pd offset     |
+| PD_A1_B51              | signed char                   | 261    | 2       |Antenna 1 5G band 1 pd offset|
+| PD_A1_B52              | signed char                   | 262    | 2       |Antenna 1 5G band 2 pd offset|
+| PD_A1_B53              | signed char                   | 263    | 2       |Antenna 1 5G band 3 pd offset|
+| PD_A1_B54              | signed char                   | 264    | 2       |Antenna 1 5G band 4 pd offset|
+| PD_A2_B24              | signed char                   | 265    | 2       |Antenna 2 2.4G pd offset     |
+| PD_A2_B51              | signed char                   | 266    | 2       |Antenna 2 5G band 1 pd offset|
+| PD_A2_B52              | signed char                   | 267    | 2       |Antenna 2 5G band 2 pd offset|
+| PD_A2_B53              | signed char                   | 268    | 2       |Antenna 2 5G band 3 pd offset|
+| PD_A2_B54              | signed char                   | 269    | 2       |Antenna 2 5G band 4 pd offset|
+
+@subsection reg_2 Security register 2
+
+Not used currently
+*/
