@@ -102,6 +102,10 @@ class DeviceData {
     {1, register0_v1_data_fields_},
   };
 
+  const Layout register1_v0_data_fields_ {
+    {"CRC_REG1", {2, 256}},
+    {"VERSION_REG1", {1, 258}},
+  };
   const Layout register1_v1_data_fields_ {
     {"CRC_REG1", {2, 256}},
     {"VERSION_REG1", {1, 258}},
@@ -123,6 +127,7 @@ class DeviceData {
     {"PD_A2_B54", {1, 269}},
   };
   const RegisterVersions register1_{
+    {0, register1_v0_data_fields_},
     {1, register1_v1_data_fields_},
     {2, register1_v2_data_fields_},
   };
